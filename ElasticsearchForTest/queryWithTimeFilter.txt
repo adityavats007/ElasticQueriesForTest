@@ -1,0 +1,12 @@
+GET index_name/_search{
+"query":{
+"from":"10",
+"size":"100",
+"range":{
+"timestamp":{
+"gte":"now",
+"lte":"now"
+}
+}
+}
+}
