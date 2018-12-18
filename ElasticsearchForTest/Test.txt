@@ -1,1 +1,80 @@
-Test file to test git.
+/*To get the API TO API values replace called_service with called_api in the query below*/
+
+{
+  "sort": [
+    {
+      "@timestamp": {
+        "order": "desc"
+      }
+    }
+  ], 
+ "query": {
+                    "bool": {
+                        "must": [{
+                            "match": {
+                                "called_api": "getAgentDetails"
+                            }
+                        }],
+                        "must_not": [{
+                            "match": {
+                                "current_service": "null"
+                            }
+                        }]
+                    }
+                },
+
+                "aggs": {
+                    "Service": {
+                        "aggs": {
+                            "API": {
+                                "terms": {
+                                    "field": "called_api",
+                                    "size": 2000
+                                }
+                            }
+                        },
+                        "terms": {
+                            "field": "current_service",
+                            "size": 100
+                        }
+                    }
+                }
+}
+
+output : -
+"aggregations": {
+        "Service": {
+            "doc_count_error_upper_bound": 0,
+            "sum_other_doc_count": 0,
+            "buckets": [
+                {
+                    "key": "PAYMENTS",
+                    "doc_count": 1452,
+                    "API": {
+                        "doc_count_error_upper_bound": 0,
+                        "sum_other_doc_count": 0,
+                        "buckets": [
+                            {
+                                "key": "getAgentDetails",
+                                "doc_count": 1452
+                            }
+                        ]
+                    }
+                },
+                {
+                    "key": "API-GATEWAY",
+                    "doc_count": 159,
+                    "API": {
+                        "doc_count_error_upper_bound": 0,
+                        "sum_other_doc_count": 0,
+                        "buckets": [
+                            {
+                                "key": "getAgentDetails",
+                                "doc_count": 159
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
